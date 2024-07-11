@@ -58,4 +58,33 @@ export class UserService {
       throw error;
     }
   }
+
+  async softDeleteUser(username: string) {
+    try {
+      const softDeletedUser = this.queryIn.update<Prisma.UserUpdateArgs>({
+        where: {
+          user_name: username,
+        },
+        data: {
+          password: '',
+          public_name: 'Deleted User',
+          phone_number: '',
+          email: '',
+          user_bio: '',
+          chatChat_id: null,
+          birth_date: null,
+          deleted_at: new Date(),
+        },
+      });
+
+      if (!softDeletedUser) {
+        throw new ServiceUnavailableException('Could not delete user');
+      }
+
+      return softDeletedUser;
+    } catch (error) {
+      console.error('Could not delete user:', error);
+      throw error;
+    }
+  }
 }
