@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class UserService {
-  private queryIn = prisma.user
+  private queryIn = prisma.user;
 
   async createUser(data: Prisma.UserCreateInput) {
     return this.queryIn.create({
