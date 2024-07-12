@@ -11,10 +11,6 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  // private userService = new UserService();
-  // private passwordService = new PasswordService();
-  // private jwtService = new JwtService();
-
   async signIn(
     username: string,
     password: string,
@@ -27,7 +23,7 @@ export class AuthService {
 
     try {
       if (!user || !isPasswordCorrect) {
-        throw new UnauthorizedException('Username or password is incorrect');
+        throw new UnauthorizedException('Invalid credentials.');
       }
 
       const payload = {
