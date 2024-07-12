@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 
 @Controller('user')
 export class UserController {
-  private readonly userService = new UserService();
+  constructor(private userService: UserService) {}
 
   @Get(':username')
   async getUser(@Param('username') username: string) {

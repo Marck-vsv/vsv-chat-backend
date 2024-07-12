@@ -5,18 +5,18 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../services/prisma.service';
-import { PasswordService } from '../services/password.service';
-
-const prisma = new PrismaService();
-const passwordService = new PasswordService();
+import { PasswordService } from 'src/services/password/password.service';
 
 @Injectable()
 export class UserService {
-  private queryIn = prisma.user;
+  constructor(private passwordService: PasswordService) {}
+
+  private prisma = new PrismaService();
+  private queryIn = this.prisma.user;
 
   async createUser(data: Prisma.UserCreateInput) {
     try {
-      const hashedPassword = passwordService.hashPassword(data.password);
+      const hashedPassword = this.passwordService.hashPassword(data.password);
       const create_user = await this.queryIn.create({
         data: {
           ...data,
@@ -41,18 +41,13 @@ export class UserService {
         where: {
           user_name: username,
         },
-        select: {
-          user_name: true,
-        },
       });
 
       if (!user) {
         throw new NotFoundException('User not found');
       }
 
-      return {
-        user_name: user.user_name,
-      };
+      return user;
     } catch (error) {
       console.error('Error fetching user:', error);
       throw error;
