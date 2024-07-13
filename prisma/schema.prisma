@@ -1,92 +1,46 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    user_id     String    @id @default(uuid())
-    user_name   String    @unique @db.VarChar(20)
-    public_name String    @db.VarChar()
-    birth_date  DateTime? @db.Date
-    password    String    @db.VarChar()
+  user_id     String    @id @default(uuid())
+  user_name   String    @unique @db.VarChar(20)
+  public_name String    @db.VarChar()
+  birth_date  DateTime? @db.Date
+  password    String    @db.VarChar()
 
-    phone_number String @db.VarChar()
-    email        String @unique @db.VarChar()
-    user_bio     String @db.Text
+  phone_number String @db.VarChar()
+  email        String @unique @db.VarChar()
+  user_bio     String @db.Text
 
-    Message     Message[]
-    Chat        Chat?     @relation(fields: [chatChat_id], references: [chat_id])
-    chatChat_id String?
+  Chat        Chat?   @relation(fields: [chatChat_id], references: [chat_id])
+  chatChat_id String?
 
-    created_at      DateTime          @default(now())
-    updated_at      DateTime          @default(now())
-    deleted_at      DateTime?
-    ChatParticipant ChatParticipant[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
 
-    @@map("user")
+  @@map("user")
 }
 
 enum ChatType {
-    PRIVATE
-    GROUP
+  PRIVATE
+  GROUP
 }
 
 model Chat {
-    chat_id           String   @id @default(uuid())
-    chat_participants User[]
-    chat_type         ChatType @default(PRIVATE)
+  chat_id           String   @id @default(uuid())
+  chat_participants User[]
+  chat_type         ChatType @default(PRIVATE)
 
-    Message         Message[]
-    ChatParticipant ChatParticipant[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now())
+  deleted_at DateTime?
 
-    created_at DateTime  @default(now())
-    updated_at DateTime  @default(now())
-    deleted_at DateTime?
-
-    @@map("chat")
-}
-
-model ChatParticipant {
-    chat_par_id String @id @default(uuid())
-
-    chat        Chat   @relation(fields: [chatChat_id], references: [chat_id])
-    chatChat_id String
-
-    user        User   @relation(fields: [userUser_id], references: [user_id])
-    userUser_id String
-
-    @@map("chatparticipant")
-}
-
-enum MediaType {
-    NONE
-    AUDIO
-    VIDEO
-    IMAGE
-}
-
-model Message {
-    message_id String @id @default(uuid())
-
-    sent_from   User   @relation(fields: [userUser_id], references: [user_id])
-    userUser_id String
-
-    chat        Chat   @relation(fields: [chatChat_id], references: [chat_id])
-    chatChat_id String
-
-    content    String    @db.Text
-    media_url  String?   @db.VarChar()
-    media_tyoe MediaType @default(NONE)
-    read       Boolean   @default(false)
-
-    deleted_by String?
-    created_at DateTime  @default(now())
-    updated_at DateTime  @default(now())
-    deleted_at DateTime?
-
-    @@map("message")
+  @@map("chat")
 }

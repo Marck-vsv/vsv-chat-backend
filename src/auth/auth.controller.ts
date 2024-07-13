@@ -17,8 +17,6 @@ export class AuthController {
   @Get('status')
   @UseGuards(JwtAuthGuard)
   async test(@Req() req: Request) {
-    console.log(req.user);
-    console.log('teste');
-    return req.user;
+    return await this.authService.getUserIdFromToken(req);
   }
 }
