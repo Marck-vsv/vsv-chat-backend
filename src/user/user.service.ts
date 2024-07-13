@@ -4,8 +4,8 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from '../services/prisma.service';
-import { PasswordService } from 'src/services/password/password.service';
+import { PrismaService } from '../utils/prisma.service';
+import { PasswordService } from 'src/utils/password/password.service';
 
 @Injectable()
 export class UserService {
