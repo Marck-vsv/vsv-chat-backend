@@ -66,7 +66,6 @@ export class UserService {
           phone_number: '',
           email: '',
           user_bio: '',
-          chatChat_id: null,
           birth_date: null,
           deleted_at: new Date(),
         },

@@ -18,12 +18,11 @@ model User {
   email        String @unique @db.VarChar()
   user_bio     String @db.Text
 
-  Chat        Chat?   @relation(fields: [chatChat_id], references: [chat_id])
-  chatChat_id String?
-
   created_at DateTime  @default(now())
   updated_at DateTime  @default(now())
   deleted_at DateTime?
+
+  ChatParticipant ChatParticipant[]
 
   @@map("user")
 }
@@ -34,13 +33,37 @@ enum ChatType {
 }
 
 model Chat {
-  chat_id           String   @id @default(uuid())
-  chat_participants User[]
-  chat_type         ChatType @default(PRIVATE)
+  chat_id   String   @id @default(uuid())
+  chat_type ChatType @default(PRIVATE)
 
   created_at DateTime  @default(now())
   updated_at DateTime  @default(now())
   deleted_at DateTime?
 
+  ChatParticipant ChatParticipant[]
+
   @@map("chat")
+}
+
+model ChatParticipant {
+  chatParticipantId String    @id @default(uuid())
+  chatId            String
+  userId            String
+  role              ChatRoles
+  lastSeenAt        DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  chat Chat @relation(fields: [chatId], references: [chat_id])
+  user User @relation(fields: [userId], references: [user_id])
+
+  @@map("chat_participant")
+}
+
+enum ChatRoles {
+  ADMIN
+  MEMBER
+  COMMON
 }

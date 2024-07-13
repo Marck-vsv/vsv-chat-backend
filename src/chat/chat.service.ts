@@ -30,7 +30,6 @@ export class ChatService {
       const create_chat = this.queryIn.create({
         data: {
           ...data,
-          chat_participants: {},
         },
       });
 
