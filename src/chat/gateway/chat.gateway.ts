@@ -27,7 +27,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('message')
   messageHandler(client: Socket, message: any) {
     console.log(message);
-
-    client.emit('reply', 'Macaco é tu');
+    client.emit('message', message);
   }
 }
