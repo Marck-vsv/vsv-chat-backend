@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ChatGateway } from './gateway/chat.gateway';
 import { PrismaService } from 'src/utils/prisma.service';
-import { Prisma } from '@prisma/client';
+// import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ChatService {
@@ -9,30 +9,26 @@ export class ChatService {
 
   private prisma = new PrismaService();
   private queryIn = this.prisma.chat;
+  private queryParticipant = this.prisma.chatParticipant;
 
-  getChatRooms() {}
-
-  createChatRoom(data: Prisma.ChatCreateInput) {
+  // Get - Get all chat rooms for user (user_name/user_id)
+  async getChatRooms(username: string) {
     try {
-      const chat = this.queryIn.create({
-        data,
+      const rooms = await this.queryParticipant.findMany({
+        where: {
+          user: {
+            user_name: username,
+          },
+        },
       });
 
-      if (!chat) {
-        throw new BadRequestException('Could not create chat room');
+      if (!rooms) {
+        throw new BadRequestException('No rooms found');
       }
 
-      return chat;
+      return rooms;
     } catch (error) {
       throw new BadRequestException(error);
     }
-  }
-
-  updateChatRoom() {
-    return 'This action updates a chatRoom';
-  }
-
-  deleteChatRoom() {
-    return 'This action removes a chatRoom';
   }
 }

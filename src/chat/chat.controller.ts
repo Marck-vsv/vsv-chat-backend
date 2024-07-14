@@ -1,34 +1,30 @@
 import {
-  Body,
+  // Body,
   Controller,
-  Delete,
+  // Delete,
   Get,
-  Post,
-  Put,
+  // Post,
+  // Put,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
-import { Prisma } from '@prisma/client';
+import { AuthService } from 'src/auth/auth.service';
+// import { Prisma } from '@prisma/client';
+import { Request } from 'express';
 
 @Controller('chat')
 @UseGuards(JwtAuthGuard)
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+    private readonly chatService: ChatService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Get('rooms')
-  async getChatRooms() {
-    return await this.chatService.getChatRooms();
+  async getChatRooms(@Req() req: Request) {
+    const username = await this.authService.getUserIdFromToken(req);
+    return await this.chatService.getChatRooms(username.username);
   }
-
-  @Post('create')
-  async createChatRoom(@Body() data: Prisma.ChatCreateInput): Promise<any> {
-    return await this.chatService.createChatRoom(data);
-  }
-
-  @Put('update')
-  updateChatRoom() {}
-
-  @Delete('delete')
-  deleteChatRoom() {}
 }
