@@ -10,37 +10,21 @@ export class ChatService {
   private prisma = new PrismaService();
   private queryIn = this.prisma.chat;
 
-  getChatRooms() {
-    try {
-      const chat_rooms = this.queryIn.findMany();
-
-      if (!chat_rooms) {
-        throw new BadRequestException('Could not get chat rooms');
-      }
-
-      return chat_rooms;
-    } catch (error) {
-      console.error('Could not get chat rooms');
-      throw error;
-    }
-  }
+  getChatRooms() {}
 
   createChatRoom(data: Prisma.ChatCreateInput) {
     try {
-      const create_chat = this.queryIn.create({
-        data: {
-          ...data,
-        },
+      const chat = this.queryIn.create({
+        data,
       });
 
-      if (!create_chat) {
-        throw new BadRequestException('Could not create chat');
+      if (!chat) {
+        throw new BadRequestException('Could not create chat room');
       }
 
-      return create_chat;
+      return chat;
     } catch (error) {
-      console.error('Could not create chat');
-      throw error;
+      throw new BadRequestException(error);
     }
   }
 

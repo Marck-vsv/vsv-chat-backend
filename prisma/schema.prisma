@@ -36,9 +36,8 @@ model Chat {
   chat_id   String   @id @default(uuid())
   chat_type ChatType @default(PRIVATE)
 
-  created_at DateTime  @default(now())
-  updated_at DateTime  @default(now())
-  deleted_at DateTime?
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
 
   ChatParticipant ChatParticipant[]
 
@@ -52,9 +51,8 @@ model ChatParticipant {
   role              ChatRoles
   lastSeenAt        DateTime?
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @default(now())
-  deletedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   chat Chat @relation(fields: [chatId], references: [chat_id])
   user User @relation(fields: [userId], references: [user_id])
